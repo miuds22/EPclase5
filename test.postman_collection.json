@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "c38ab905-bdd6-44ff-b408-9eb81ab687c6",
+		"name": "test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20591740"
+	},
+	"item": [
+		{
+			"name": "ObtenerTodos",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "crear una materia",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nombre\":\"EP\",\n    \"carrera_id\":\"3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/mat/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"mat",
+						""
+					],
+					"query": [
+						{
+							"key": "nombre",
+							"value": "Estrategias de persistencia",
+							"disabled": true
+						},
+						{
+							"key": "carrera_id",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modificar una materia",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nombre\":\"Estrategias de Persistencia\",\n    \"carrera_id\":\"3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/mat/10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"mat",
+						"10"
+					],
+					"query": [
+						{
+							"key": "nombre",
+							"value": "Estrategias de persistencia",
+							"disabled": true
+						},
+						{
+							"key": "carrera_id",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eliminar una materia",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/mat/10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"mat",
+						"10"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
