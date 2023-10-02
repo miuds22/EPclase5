@@ -3,9 +3,13 @@ var router = express.Router();
 var models = require("../models");
 
 router.get("/", (req, res) => {
-  console.log("Esto es un mensaje para ver en consola");
+
+  const paginaActual = parseInt(req.query.paginaActual);
+  const cantidadAVer = parseInt(req.query.cantidadAVer);
+  const registrosParaOmitir = (paginaActual - 1) * cantidadAVer;
+
   models.Alumno
-    .findAll({
+    .findAll({ offset: registrosParaOmitir, limit: cantidadAVer ,
       attributes: [ "id","nombre","apellido","fecInscripcion","fecNacimiento" ,"carrera_id"]
       ,include:[{ model:models.carrera, attributes: ["id","nombre"]}]
 
@@ -87,6 +91,7 @@ router.delete("/:id", (req, res) => {
     onError: () => res.sendStatus(500)
   });
 });
+
 
 
 
