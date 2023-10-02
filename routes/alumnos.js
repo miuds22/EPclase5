@@ -4,26 +4,29 @@ var models = require("../models");
 
 router.get("/", (req, res) => {
   console.log("Esto es un mensaje para ver en consola");
-  models.materia
+  models.Alumno
     .findAll({
-      attributes: ["id", "nombre","carrera_id"],
-      include:[
-      {as:'aulaAsignada', model:models.Aula, attributes: ["id","numero"]},
-      {as:'Carrera-Relacionada', model:models.carrera, attributes: ["id","nombre"]}
-    ]      
+      attributes: [ "id","nombre","apellido","fecInscripcion","fecNacimiento" ,"carrera_id"]
+      ,include:[{ model:models.carrera, attributes: ["id","nombre"]}]
+
     })
-    .then(materias => res.send(materias))
+    .then(Alumnos => res.send(Alumnos))
     .catch(() => res.sendStatus(500));
 });
 
 router.post("/", (req, res) => {
-  console.log("Esto es un mensaje para ver en consola",req.body);
-  models.materia
-    .create({ nombre: req.body.nombre , carrera_id: req.body.carrera_id })
-    .then(materia => res.status(201).send({ id: materia.id ,  nombre: materia.nombre , carrera_id: materia.carrera_id }))
+  models.Alumno
+    .create({ 
+              nombre: req.body.nombre,
+              apellido: req.body.apellido,
+              fecInscripcion: req.body.fecInscripcion,
+              fecNacimiento: req.body.fecNacimiento,
+              carrera_id: req.body.carrera_id
+             })
+    .then(Alumno => res.status(201).send({ id: Alumno.id }))
     .catch(error => {
       if (error == "SequelizeUniqueConstraintError: Validation error") {
-        res.status(400).send('Bad request: existe otra materia con el mismo nombre')
+        res.status(400).send('Bad request: existe otra Alumno con el mismo nombre')
       }
       else {
         console.log(`Error al intentar insertar en la base de datos: ${error}`)
@@ -32,39 +35,40 @@ router.post("/", (req, res) => {
     });
 });
 
-const findCarrera = (id, { onSuccess, onNotFound, onError }) => {
-  models.materia
+const findAlumno = (id, { onSuccess, onNotFound, onError }) => {
+  models.Alumno
     .findOne({
-      attributes: ["id", "nombre","carrera_id"],
+      attributes: ["id"],
       where: { id }
     })
-    .then(materia => (materia ? onSuccess(materia) : onNotFound()))
+    .then(Alumno => (Alumno ? onSuccess(Alumno) : onNotFound()))
     .catch(() => onError());
 };
 
 router.get("/:id", (req, res) => {
-  findCarrera(req.params.id, {
-    onSuccess: materia => res.send(materia),
+  findAlumno(req.params.id, {
+    onSuccess: Alumno => res.send(Alumno),
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   });
 });
 
 router.put("/:id", (req, res) => {
-  const onSuccess = materia =>
-    materia
-      .update({ nombre: req.body.nombre ,carrera_id: req.body.carrera_id }, { fields: ["nombre","carrera_id"] })
+  const onSuccess = Alumno =>
+    Alumno
+      .update({ nombre: req.body.nombre,apellido: req.body.apellido,fecInscripcion: req.body.fecInscripcion,fecNacimiento: req.body.fecNacimiento,carrera_id: req.body.carrera_id }
+              ,{ fields: ["nombre","apellido","fecInscripcion","fecNacimiento" ,"carrera_id"] })
       .then(() => res.sendStatus(200))
       .catch(error => {
         if (error == "SequelizeUniqueConstraintError: Validation error") {
-          res.status(400).send('Bad request: existe otra materia con el mismo nombre')
+          res.status(400).send('Bad request: existe otra Alumno con el mismo nombre')
         }
         else {
           console.log(`Error al intentar actualizar la base de datos: ${error}`)
           res.sendStatus(500)
         }
       });
-    findCarrera(req.params.id, {
+    findAlumno(req.params.id, {
     onSuccess,
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
@@ -72,16 +76,18 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const onSuccess = materia =>
-    materia
+  const onSuccess = Alumno =>
+    Alumno
       .destroy()
       .then(() => res.sendStatus(200))
       .catch(() => res.sendStatus(500));
-  findCarrera(req.params.id, {
+  findAlumno(req.params.id, {
     onSuccess,
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   });
 });
+
+
 
 module.exports = router;
